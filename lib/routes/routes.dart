@@ -1,0 +1,31 @@
+abstract class Routes {
+  static const initialSplash = '/';
+  static const instrction = '/instrction';
+  static const signIn = '/signIn';
+  static const signUp = '/signUp';
+  static const forgotPassword = '/forgotPassword';
+  static const verificationCode = '/verificationCode';
+  static const changePassword = '/changePassword';
+  static const changeCard = '/changeCard';
+  static const subscription = '/subscription';
+  static const profile = '/profile';
+  static const dashboard = '/dashboard';
+  static const taskBoard = '/taskBoard';
+  static const updateTask = '/updateTask';
+  static const powerMe = '/powerMe';
+  static const addPowerMe = '/addPowerMe';
+  static const visualBoard = '/visualBoard';
+  static const addVisualBoard = '/addVisualBoard';
+  static const storyBoard = '/storyBoard';
+  static const addStoryBoard = '/addStoryBoard';
+  static const updateStoryBoard = '/updateStoryBoard';
+  static const storyBoardDetail = '/storyBoardDetail';
+  static const familyTree = '/familyTree';
+  static const addFamilyTree = '/addFamilyTree';
+  static const editFamilyTree = '/editFamilyTree';
+  static const lkigaiBoard = '/lkigaiBoard';
+  static const lkigaiDetail = '/lkigaiDetail';
+   static const updateLkigai = '/updateLkigai';
+  static const listLkigaiBoard = '/listLkigaiBoard';
+  static const addLkigaiBoard = '/addLkigaiBoard';
+}
