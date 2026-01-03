@@ -44,9 +44,10 @@ class HomeView extends GetView<DashBoardHomeController> {
               ),
               // Other content
               SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 15),
                       child: Row(
@@ -134,7 +135,17 @@ class HomeView extends GetView<DashBoardHomeController> {
                             type: 'visualBoard'),
                       ],
                     ),
-                  ],
+                    Row(
+                      children: [
+                        gridCard(
+                            image: '🔮',
+                            text: 'Quantum Deck',
+                            type: 'quantumDeck'),
+                        Expanded(child: Container()), // Empty space for now
+                      ],
+                    ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -193,6 +204,9 @@ class HomeView extends GetView<DashBoardHomeController> {
           if (type == "familyTree") {
             Get.toNamed(Routes.familyTree);
           }
+          if (type == "quantumDeck") {
+            Get.toNamed(Routes.quantumDeck);
+          }
         },
         child: Container(
           // height: Get.height * 0.25,
@@ -206,10 +220,17 @@ class HomeView extends GetView<DashBoardHomeController> {
             children: [
               CircleAvatar(
                   radius: Get.height * 0.07,
-                  backgroundColor: const Color(0xFFB9D4D6),
+                  backgroundColor: type == "quantumDeck"
+                      ? const Color(0xFF008B8B).withOpacity(0.2)
+                      : const Color(0xFFB9D4D6),
                   child: Padding(
                     padding: const EdgeInsets.all(7.0),
-                    child: Image.asset(image),
+                    child: type == "quantumDeck"
+                        ? Text(
+                            image,
+                            style: TextStyle(fontSize: Get.height * 0.05),
+                          )
+                        : Image.asset(image),
                   )),
               SizedBox(
                 height: Get.height * 0.015,

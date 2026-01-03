@@ -36,6 +36,8 @@ import '../modules/dashboard/dashboard pages/power of me/power_me_bindings.dart'
 import '../modules/dashboard/dashboard pages/story board/story_board_bindings.dart';
 import '../modules/dashboard/dashboard pages/visual board/add_visual_board_view.dart';
 import '../modules/dashboard/dashboard pages/visual board/visual_board_view.dart';
+import '../modules/dashboard/dashboard pages/quantum deck/quantum_deck_view.dart';
+import '../modules/dashboard/dashboard pages/quantum deck/quantum_deck_bindings.dart';
 import '../modules/profile/profile_bindings.dart';
 import '../modules/subscription/subscription_bindings.dart';
 import 'binding.dart';
@@ -163,6 +165,11 @@ abstract class AppPages {
     GetPage(
       name: Routes.addLkigaiBoard,
       page: () => const AddLkigaiBoardView(),
+    ),
+    GetPage(
+      name: Routes.quantumDeck,
+      page: () => const QuantumDeckView(),
+      binding: QuantumDeckBindings(),
     ),
   ];
 }
