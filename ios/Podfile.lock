@@ -150,7 +150,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   device_info_plus: 71ffc6ab7634ade6267c7a93088ed7e4f74e5896
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_credit_card: 75489579678755891ccb1ddcc13415defcea4f01
   flutter_inappwebview: 180a2f38c18dfbfb8f0c12f7bd42ce02dfd6c765
   flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619

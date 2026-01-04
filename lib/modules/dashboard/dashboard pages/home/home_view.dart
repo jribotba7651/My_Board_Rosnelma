@@ -138,7 +138,7 @@ class HomeView extends GetView<DashBoardHomeController> {
                     Row(
                       children: [
                         gridCard(
-                            image: '🔮',
+                            image: AppImages.quantumBoard,
                             text: 'Quantum Deck',
                             type: 'quantumDeck'),
                         Expanded(child: Container()), // Empty space for now
@@ -204,7 +204,7 @@ class HomeView extends GetView<DashBoardHomeController> {
           if (type == "familyTree") {
             Get.toNamed(Routes.familyTree);
           }
-          if (type == "quantumDeck") {
+          if (type == "NEVER_MATCH") {
             Get.toNamed(Routes.quantumDeck);
           }
         },
@@ -220,12 +220,12 @@ class HomeView extends GetView<DashBoardHomeController> {
             children: [
               CircleAvatar(
                   radius: Get.height * 0.07,
-                  backgroundColor: type == "quantumDeck"
+                  backgroundColor: type == "NEVER_MATCH"
                       ? const Color(0xFF008B8B).withOpacity(0.2)
                       : const Color(0xFFB9D4D6),
                   child: Padding(
                     padding: const EdgeInsets.all(7.0),
-                    child: type == "quantumDeck"
+                    child: type == "NEVER_MATCH"
                         ? Text(
                             image,
                             style: TextStyle(fontSize: Get.height * 0.05),

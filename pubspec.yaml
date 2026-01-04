@@ -119,3 +119,5 @@ icons_launcher:
       enable: true
     ios:
       enable: true
+dependency_overrides:
+  flutter_widget_from_html_core: ^0.17.0
