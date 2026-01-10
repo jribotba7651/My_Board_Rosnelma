@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'My Board',
       theme: AppTheme.lightTheme,
-      initialRoute: Routes.initialSplash,
+      initialRoute: Routes.quantumDeck,
       getPages: AppPages.pages,
       initialBinding: Binding(),
      // home: MyFamilyApp(),
