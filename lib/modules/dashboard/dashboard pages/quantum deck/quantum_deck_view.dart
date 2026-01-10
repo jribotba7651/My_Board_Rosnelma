@@ -1,12 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:my_board/global_controllers/global_controller.dart';
 import 'package:my_board/imports.dart';
 import 'package:my_board/modules/dashboard/dashboard%20pages/quantum%20deck/quantum_deck_controller.dart';
-import 'package:my_board/modules/dashboard/dashboard%20pages/quantum%20deck/quantum_deck_detail.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../data/models/quantum_card_model.dart';
+import '../../../../core/widgets/quantum_card_placeholder.dart';
 
 class QuantumDeckView extends GetView<QuantumDeckController> {
   const QuantumDeckView({super.key});
@@ -145,121 +144,14 @@ class QuantumDeckView extends GetView<QuantumDeckController> {
                   onTap: () {
                     Get.toNamed(Routes.quantumDeckDetail, arguments: todaysCard);
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: _getCardColors(todaysCard.category),
-                      ),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 20,
-                          offset: Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.25),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Text(
-                                  todaysCard.category.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontFamily: AppFonts.bold,
-                                    letterSpacing: 1.2,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                _getCategoryIcon(todaysCard.category),
-                                color: Colors.white.withOpacity(0.9),
-                                size: 28,
-                              ),
-                            ],
-                          ),
-
-                          Spacer(),
-
-                          Text(
-                            todaysCard.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontFamily: AppFonts.bold,
-                              height: 1.2,
-                            ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-
-                          SizedBox(height: 16),
-
-                          Text(
-                            todaysCard.description,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.95),
-                              fontSize: 16,
-                              fontFamily: AppFonts.medium,
-                              height: 1.4,
-                            ),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-
-                          Spacer(),
-
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.schedule,
-                                color: Colors.white.withOpacity(0.8),
-                                size: 18,
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                "${todaysCard.estimatedTime} minutes",
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 14,
-                                  fontFamily: AppFonts.medium,
-                                ),
-                              ),
-                              Spacer(),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  todaysCard.difficulty,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontFamily: AppFonts.medium,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  child: QuantumCardPlaceholder(
+                    zodiacSign: _extractZodiacSign(todaysCard.title),
+                    zodiacSymbol: _getZodiacSymbol(todaysCard.title),
+                    planet: _extractPlanet(todaysCard.title),
+                    keyword: todaysCard.description,
+                    element: todaysCard.category,
+                    width: 350,
+                    height: 500,
                   ),
                 ),
               ),
@@ -331,131 +223,101 @@ class QuantumDeckView extends GetView<QuantumDeckController> {
       onTap: () {
         Get.toNamed(Routes.quantumDeckDetail, arguments: card);
       },
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: _getCardColors(card.category),
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      card.category,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontFamily: AppFonts.medium,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    _getCategoryIcon(card.category),
-                    color: Colors.white.withOpacity(0.8),
-                    size: 20,
-                  ),
-                ],
-              ),
-              Spacer(),
-              Text(
-                card.title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontFamily: AppFonts.bold,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 8),
-              Text(
-                card.description,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 12,
-                  fontFamily: AppFonts.regular,
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Spacer(),
-              Row(
-                children: [
-                  Icon(
-                    Icons.schedule,
-                    color: Colors.white.withOpacity(0.7),
-                    size: 14,
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    "${card.estimatedTime} min",
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
-                      fontSize: 12,
-                      fontFamily: AppFonts.regular,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+      child: QuantumCardPlaceholder(
+        zodiacSign: _extractZodiacSign(card.title),
+        zodiacSymbol: _getZodiacSymbol(card.title),
+        planet: _extractPlanet(card.title),
+        keyword: card.description,
+        element: card.category,
+        width: 280,
+        height: 400,
       ),
     );
   }
 
-  List<Color> _getCardColors(String category) {
-    switch (category.toLowerCase()) {
-      case 'fire':
-        return [Color(0xFFFF6B35), Color(0xFFFF8E53)];
-      case 'earth':
-        return [Color(0xFF6B5B95), Color(0xFF88D8C0)];
-      case 'air':
-        return [Color(0xFF4facfe), Color(0xFF00f2fe)];
-      case 'water':
-        return [Color(0xFF43e97b), Color(0xFF38f9d7)];
-      case 'spirit':
-        return [Color(0xFFfa709a), Color(0xFFfee140)];
+
+  String _extractZodiacSign(String title) {
+    // Extract the first word from title as zodiac sign
+    final words = title.split(' ');
+    if (words.isNotEmpty) {
+      return words.first;
+    }
+    return 'Aries';
+  }
+
+  String _getZodiacSymbol(String title) {
+    final sign = _extractZodiacSign(title).toLowerCase();
+    switch (sign) {
+      case 'aries':
+        return '♈';
+      case 'taurus':
+        return '♉';
+      case 'gemini':
+        return '♊';
+      case 'cancer':
+        return '♋';
+      case 'leo':
+        return '♌';
+      case 'virgo':
+        return '♍';
+      case 'libra':
+        return '♎';
+      case 'scorpio':
+        return '♏';
+      case 'sagittarius':
+        return '♐';
+      case 'capricorn':
+        return '♑';
+      case 'aquarius':
+        return '♒';
+      case 'pisces':
+        return '♓';
       default:
-        return [Color(0xFF667eea), Color(0xFF764ba2)];
+        return '♈';
     }
   }
 
-  IconData _getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
-      case 'fire':
-        return Icons.local_fire_department;
-      case 'earth':
-        return Icons.terrain;
-      case 'air':
-        return Icons.air;
-      case 'water':
-        return Icons.water_drop;
-      case 'spirit':
-        return Icons.auto_awesome;
+  String _extractPlanet(String title) {
+    // Extract planet name from title (usually after the zodiac sign)
+    final words = title.toLowerCase().split(' ');
+
+    final planets = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
+
+    for (final word in words) {
+      if (planets.contains(word)) {
+        return word[0].toUpperCase() + word.substring(1);
+      }
+    }
+
+    // Default planet mapping based on zodiac sign
+    final sign = _extractZodiacSign(title).toLowerCase();
+    switch (sign) {
+      case 'aries':
+        return 'Mars';
+      case 'taurus':
+        return 'Venus';
+      case 'gemini':
+        return 'Mercury';
+      case 'cancer':
+        return 'Moon';
+      case 'leo':
+        return 'Sun';
+      case 'virgo':
+        return 'Mercury';
+      case 'libra':
+        return 'Venus';
+      case 'scorpio':
+        return 'Mars';
+      case 'sagittarius':
+        return 'Jupiter';
+      case 'capricorn':
+        return 'Saturn';
+      case 'aquarius':
+        return 'Uranus';
+      case 'pisces':
+        return 'Neptune';
       default:
-        return Icons.auto_awesome;
+        return 'Sun';
     }
   }
 

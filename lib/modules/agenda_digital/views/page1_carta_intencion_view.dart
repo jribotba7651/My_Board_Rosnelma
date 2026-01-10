@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../controllers/agenda_controller.dart';
+import '../../../core/widgets/quantum_card_placeholder.dart';
 
 class Page1CartaIntencionView extends StatelessWidget {
   const Page1CartaIntencionView({Key? key}) : super(key: key);
@@ -130,129 +131,30 @@ class Page1CartaIntencionView extends StatelessWidget {
 
   // SECTION 2: Card of the Day
   Widget _buildCardOfTheDay(dynamic card) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: _getCardColors(card.category),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quantum Card of the Day',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: _getCardColors(card.category)[0].withOpacity(0.3),
-            blurRadius: 12,
-            offset: Offset(0, 4),
+        SizedBox(height: 12),
+        Center(
+          child: QuantumCardPlaceholder(
+            zodiacSign: _extractZodiacSign(card.title),
+            zodiacSymbol: _getZodiacSymbol(card.title),
+            planet: _extractPlanet(card.title),
+            keyword: card.description,
+            element: card.category,
+            width: 240,
+            height: 320,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                _getCategoryIcon(card.category),
-                color: Colors.white,
-                size: 28,
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Quantum Card of the Day',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      card.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      card.category,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      '${card.tags.isNotEmpty ? card.tags[0] : 'quantum'}',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Text(
-            card.description,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.95),
-              fontSize: 16,
-              height: 1.4,
-            ),
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Icon(Icons.schedule, color: Colors.white.withOpacity(0.8), size: 16),
-              SizedBox(width: 6),
-              Text(
-                '${card.estimatedTime} min',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
-                ),
-              ),
-              SizedBox(width: 20),
-              Icon(Icons.signal_cellular_alt, color: Colors.white.withOpacity(0.8), size: 16),
-              SizedBox(width: 6),
-              Text(
-                card.difficulty,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -441,6 +343,91 @@ class Page1CartaIntencionView extends StatelessWidget {
         return Icons.auto_awesome; // Spirit/cosmic element
       default:
         return Icons.auto_awesome; // Default cosmic icon
+    }
+  }
+
+  String _extractZodiacSign(String title) {
+    // Extract the first word from title as zodiac sign
+    final words = title.split(' ');
+    if (words.isNotEmpty) {
+      return words.first;
+    }
+    return 'Aries';
+  }
+
+  String _getZodiacSymbol(String title) {
+    final sign = _extractZodiacSign(title).toLowerCase();
+    switch (sign) {
+      case 'aries':
+        return '♈';
+      case 'taurus':
+        return '♉';
+      case 'gemini':
+        return '♊';
+      case 'cancer':
+        return '♋';
+      case 'leo':
+        return '♌';
+      case 'virgo':
+        return '♍';
+      case 'libra':
+        return '♎';
+      case 'scorpio':
+        return '♏';
+      case 'sagittarius':
+        return '♐';
+      case 'capricorn':
+        return '♑';
+      case 'aquarius':
+        return '♒';
+      case 'pisces':
+        return '♓';
+      default:
+        return '♈';
+    }
+  }
+
+  String _extractPlanet(String title) {
+    // Extract planet name from title (usually after the zodiac sign)
+    final words = title.toLowerCase().split(' ');
+
+    final planets = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
+
+    for (final word in words) {
+      if (planets.contains(word)) {
+        return word[0].toUpperCase() + word.substring(1);
+      }
+    }
+
+    // Default planet mapping based on zodiac sign
+    final sign = _extractZodiacSign(title).toLowerCase();
+    switch (sign) {
+      case 'aries':
+        return 'Mars';
+      case 'taurus':
+        return 'Venus';
+      case 'gemini':
+        return 'Mercury';
+      case 'cancer':
+        return 'Moon';
+      case 'leo':
+        return 'Sun';
+      case 'virgo':
+        return 'Mercury';
+      case 'libra':
+        return 'Venus';
+      case 'scorpio':
+        return 'Mars';
+      case 'sagittarius':
+        return 'Jupiter';
+      case 'capricorn':
+        return 'Saturn';
+      case 'aquarius':
+        return 'Uranus';
+      case 'pisces':
+        return 'Neptune';
+      default:
+        return 'Sun';
     }
   }
 }
