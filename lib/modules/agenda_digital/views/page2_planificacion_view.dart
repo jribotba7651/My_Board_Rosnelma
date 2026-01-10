@@ -58,16 +58,16 @@ class Page2PlanificacionView extends StatelessWidget {
         ),
         SizedBox(height: 16),
 
-        _buildPriorityField(1, 'Most important task for today', controller.prioridad1),
+        _buildPriorityField(1, 'Most important task for today', controller.priority1Controller),
         SizedBox(height: 12),
-        _buildPriorityField(2, 'Second priority', controller.prioridad2),
+        _buildPriorityField(2, 'Second priority', controller.priority2Controller),
         SizedBox(height: 12),
-        _buildPriorityField(3, 'Third priority', controller.prioridad3),
+        _buildPriorityField(3, 'Third priority', controller.priority3Controller),
       ],
     );
   }
 
-  Widget _buildPriorityField(int number, String hint, RxString observable) {
+  Widget _buildPriorityField(int number, String hint, TextEditingController textController) {
     return Row(
       children: [
         Container(
@@ -91,6 +91,7 @@ class Page2PlanificacionView extends StatelessWidget {
         SizedBox(width: 12),
         Expanded(
           child: TextField(
+            controller: textController,
             decoration: InputDecoration(
               hintText: hint,
               border: OutlineInputBorder(
@@ -109,7 +110,6 @@ class Page2PlanificacionView extends StatelessWidget {
               filled: true,
               fillColor: Colors.white,
             ),
-            onChanged: (value) => observable.value = value,
           ),
         ),
       ],
@@ -232,7 +232,7 @@ class Page2PlanificacionView extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.grey[50],
                     ),
-                    onChanged: (value) => controller.timeBlocks[blockIndex].value = value,
+                    controller: controller.timeBlockControllers[blockIndex],
                   ),
                 ),
               ],
@@ -335,7 +335,7 @@ class Page2PlanificacionView extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                 ),
-                onChanged: (value) => controller.breakfast.value = value,
+                controller: controller.breakfastController,
               ),
             ),
             SizedBox(width: 8),
@@ -359,7 +359,7 @@ class Page2PlanificacionView extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                 ),
-                onChanged: (value) => controller.lunch.value = value,
+                controller: controller.lunchController,
               ),
             ),
             SizedBox(width: 8),
@@ -383,7 +383,7 @@ class Page2PlanificacionView extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                 ),
-                onChanged: (value) => controller.dinner.value = value,
+                controller: controller.dinnerController,
               ),
             ),
           ],
@@ -398,15 +398,7 @@ class Page2PlanificacionView extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          controller.guardarEntrada();
-          Get.snackbar(
-            'Success',
-            'Daily planning saved successfully!',
-            backgroundColor: Color(0xFF008B8B),
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 2),
-          );
+          controller.savePlanningData();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFF008B8B),

@@ -228,7 +228,7 @@ class Page3ReflexionView extends StatelessWidget {
             fillColor: Colors.white,
           ),
           maxLines: 3,
-          onChanged: (value) => controller.cardManifestation.value = value,
+          controller: controller.cardManifestationController,
         ),
       ],
     );
@@ -254,16 +254,16 @@ class Page3ReflexionView extends StatelessWidget {
         ),
         SizedBox(height: 16),
 
-        _buildWinField(1, 'First win of the day', controller.win1),
+        _buildWinField(1, 'First win of the day', controller.win1Controller),
         SizedBox(height: 12),
-        _buildWinField(2, 'Second win of the day', controller.win2),
+        _buildWinField(2, 'Second win of the day', controller.win2Controller),
         SizedBox(height: 12),
-        _buildWinField(3, 'Third win of the day', controller.win3),
+        _buildWinField(3, 'Third win of the day', controller.win3Controller),
       ],
     );
   }
 
-  Widget _buildWinField(int number, String hint, RxString observable) {
+  Widget _buildWinField(int number, String hint, TextEditingController textController) {
     return Row(
       children: [
         Container(
@@ -305,7 +305,7 @@ class Page3ReflexionView extends StatelessWidget {
               filled: true,
               fillColor: Colors.grey[50],
             ),
-            onChanged: (value) => observable.value = value,
+            controller: textController,
           ),
         ),
       ],
@@ -351,7 +351,7 @@ class Page3ReflexionView extends StatelessWidget {
             fillColor: Colors.white,
           ),
           maxLines: 2,
-          onChanged: (value) => controller.lessonsLearned.value = value,
+          controller: controller.lessonsLearnedController,
         ),
       ],
     );
@@ -396,7 +396,7 @@ class Page3ReflexionView extends StatelessWidget {
             fillColor: Colors.white,
           ),
           maxLines: 6,
-          onChanged: (value) => controller.freeNotes.value = value,
+          controller: controller.freeNotesController,
         ),
       ],
     );
@@ -441,7 +441,7 @@ class Page3ReflexionView extends StatelessWidget {
             fillColor: Colors.white,
           ),
           maxLines: 2,
-          onChanged: (value) => controller.gratitude.value = value,
+          controller: controller.gratitudeController,
         ),
       ],
     );
@@ -453,15 +453,7 @@ class Page3ReflexionView extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          controller.guardarEntrada();
-          Get.snackbar(
-            'Success',
-            'Complete day saved successfully!',
-            backgroundColor: Color(0xFF008B8B),
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 2),
-          );
+          controller.saveReflectionData();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFF008B8B),

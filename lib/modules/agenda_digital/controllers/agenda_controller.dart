@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/models/quantum_card_model.dart';
 
@@ -56,11 +57,84 @@ class AgendaController extends GetxController {
   // Current card of the day
   var currentCard = Rxn<QuantumCardModel>();
 
+  // TextEditingControllers for state persistence
+  late final TextEditingController reflection1Controller;
+  late final TextEditingController reflection2Controller;
+  late final TextEditingController reflection3Controller;
+  late final TextEditingController priority1Controller;
+  late final TextEditingController priority2Controller;
+  late final TextEditingController priority3Controller;
+  late final TextEditingController breakfastController;
+  late final TextEditingController lunchController;
+  late final TextEditingController dinnerController;
+  late final TextEditingController cardManifestationController;
+  late final TextEditingController win1Controller;
+  late final TextEditingController win2Controller;
+  late final TextEditingController win3Controller;
+  late final TextEditingController lessonsLearnedController;
+  late final TextEditingController freeNotesController;
+  late final TextEditingController gratitudeController;
+  late final List<TextEditingController> timeBlockControllers = [];
+
   @override
   void onInit() {
     super.onInit();
     print('AgendaController initialized');
+    _initializeControllers();
     _updateCardOfTheDay();
+  }
+
+  void _initializeControllers() {
+    // Initialize all TextEditingControllers
+    reflection1Controller = TextEditingController();
+    reflection2Controller = TextEditingController();
+    reflection3Controller = TextEditingController();
+    priority1Controller = TextEditingController();
+    priority2Controller = TextEditingController();
+    priority3Controller = TextEditingController();
+    breakfastController = TextEditingController();
+    lunchController = TextEditingController();
+    dinnerController = TextEditingController();
+    cardManifestationController = TextEditingController();
+    win1Controller = TextEditingController();
+    win2Controller = TextEditingController();
+    win3Controller = TextEditingController();
+    lessonsLearnedController = TextEditingController();
+    freeNotesController = TextEditingController();
+    gratitudeController = TextEditingController();
+
+    // Initialize time block controllers (18 slots)
+    for (int i = 0; i < 18; i++) {
+      timeBlockControllers.add(TextEditingController());
+    }
+  }
+
+  @override
+  void onClose() {
+    // Dispose all controllers
+    reflection1Controller.dispose();
+    reflection2Controller.dispose();
+    reflection3Controller.dispose();
+    priority1Controller.dispose();
+    priority2Controller.dispose();
+    priority3Controller.dispose();
+    breakfastController.dispose();
+    lunchController.dispose();
+    dinnerController.dispose();
+    cardManifestationController.dispose();
+    win1Controller.dispose();
+    win2Controller.dispose();
+    win3Controller.dispose();
+    lessonsLearnedController.dispose();
+    freeNotesController.dispose();
+    gratitudeController.dispose();
+
+    // Dispose time block controllers
+    for (var controller in timeBlockControllers) {
+      controller.dispose();
+    }
+
+    super.onClose();
   }
 
   // Update card when date changes
@@ -791,7 +865,86 @@ class AgendaController extends GetxController {
   void guardarEntrada() {
     print('Saving entry for day ${selectedDate.value}');
     print('Card: ${currentCard.value?.title}');
-    print('Reflections: $reflection1, $reflection2, $reflection3');
+    print('Reflections: ${reflection1Controller.text}, ${reflection2Controller.text}, ${reflection3Controller.text}');
     // Save implementation will go here later
+  }
+
+  void saveCardData() {
+    // Collect card reflection data
+    final cardData = {
+      'date': selectedDate.value,
+      'cardName': currentCard.value?.title ?? '',
+      'reflection1': reflection1Controller.text,
+      'reflection2': reflection2Controller.text,
+      'reflection3': reflection3Controller.text,
+    };
+
+    print('Saving card data: $cardData');
+
+    // For now, just show success message
+    Get.snackbar(
+      'Success',
+      'Card reflections saved successfully!',
+      backgroundColor: Color(0xFF008B8B),
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: 2),
+    );
+  }
+
+  void savePlanningData() {
+    // Collect planning data
+    final planningData = {
+      'date': selectedDate.value,
+      'priority1': priority1Controller.text,
+      'priority2': priority2Controller.text,
+      'priority3': priority3Controller.text,
+      'breakfast': breakfastController.text,
+      'lunch': lunchController.text,
+      'dinner': dinnerController.text,
+      'waterGlasses': waterGlasses,
+      'timeBlocks': timeBlockControllers.map((c) => c.text).toList(),
+    };
+
+    print('Saving planning data: $planningData');
+
+    Get.snackbar(
+      'Success',
+      'Daily planning saved successfully!',
+      backgroundColor: Color(0xFF008B8B),
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: 2),
+    );
+  }
+
+  void saveReflectionData() {
+    // Collect reflection data
+    final reflectionData = {
+      'date': selectedDate.value,
+      'dayRating': rating.value,
+      'completedPriorities': completedPriorities.value,
+      'practicedSelfCare': practicedSelfCare.value,
+      'connectedWithOthers': connectedWithOthers.value,
+      'honoredEnergy': honoredEnergy.value,
+      'cardManifestation': cardManifestationController.text,
+      'win1': win1Controller.text,
+      'win2': win2Controller.text,
+      'win3': win3Controller.text,
+      'lessonsLearned': lessonsLearnedController.text,
+      'freeNotes': freeNotesController.text,
+      'gratitude': gratitudeController.text,
+    };
+
+    print('Saving reflection data: $reflectionData');
+
+    Get.snackbar(
+      'Complete Day Saved',
+      'Your evening reflection has been saved!',
+      backgroundColor: Color(0xFF008B8B),
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: 2),
+    );
   }
 }

@@ -302,7 +302,7 @@ class Page1CartaIntencionView extends StatelessWidget {
           controller: controller,
           title: 'How does this card resonate with me?',
           hint: 'Write about how this card speaks to you today...',
-          observable: controller.reflection1,
+          textController: controller.reflection1Controller,
         ),
         SizedBox(height: 16),
 
@@ -311,7 +311,7 @@ class Page1CartaIntencionView extends StatelessWidget {
           controller: controller,
           title: 'What specific action will I take?',
           hint: 'Describe the concrete action you will take today...',
-          observable: controller.reflection2,
+          textController: controller.reflection2Controller,
         ),
         SizedBox(height: 16),
 
@@ -320,7 +320,7 @@ class Page1CartaIntencionView extends StatelessWidget {
           controller: controller,
           title: 'What intention do I set for today?',
           hint: 'Set a clear intention for your day...',
-          observable: controller.reflection3,
+          textController: controller.reflection3Controller,
         ),
       ],
     );
@@ -330,7 +330,7 @@ class Page1CartaIntencionView extends StatelessWidget {
     required AgendaController controller,
     required String title,
     required String hint,
-    required RxString observable,
+    required TextEditingController textController,
   }) {
     return Container(
       padding: EdgeInsets.all(16),
@@ -359,7 +359,7 @@ class Page1CartaIntencionView extends StatelessWidget {
           ),
           SizedBox(height: 12),
           TextField(
-            onChanged: (value) => observable.value = value,
+            controller: textController,
             maxLines: 3,
             decoration: InputDecoration(
               hintText: hint,
@@ -387,14 +387,7 @@ class Page1CartaIntencionView extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          controller.guardarEntrada();
-          Get.snackbar(
-            'Saved',
-            'Your daily reflection has been saved!',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Color(0xFF008B8B),
-            colorText: Colors.white,
-          );
+          controller.saveCardData();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFF008B8B),
