@@ -1,5 +1,4 @@
-import 'package:my_board/imports.dart';
-
+import '../../../../imports.dart';
 import 'quantum_deck_controller.dart';
 
 class QuantumDeckBindings extends Bindings {

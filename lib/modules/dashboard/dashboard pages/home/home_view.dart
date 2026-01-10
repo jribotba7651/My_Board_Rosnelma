@@ -204,7 +204,7 @@ class HomeView extends GetView<DashBoardHomeController> {
           if (type == "familyTree") {
             Get.toNamed(Routes.familyTree);
           }
-          if (type == "NEVER_MATCH") {
+          if (type == "quantumDeck") {
             Get.toNamed(Routes.quantumDeck);
           }
         },
@@ -220,15 +220,16 @@ class HomeView extends GetView<DashBoardHomeController> {
             children: [
               CircleAvatar(
                   radius: Get.height * 0.07,
-                  backgroundColor: type == "NEVER_MATCH"
-                      ? const Color(0xFF008B8B).withOpacity(0.2)
+                  backgroundColor: type == "quantumDeck"
+                      ? const Color(0xFF9C27B0).withOpacity(0.2)
                       : const Color(0xFFB9D4D6),
                   child: Padding(
                     padding: const EdgeInsets.all(7.0),
-                    child: type == "NEVER_MATCH"
-                        ? Text(
-                            image,
-                            style: TextStyle(fontSize: Get.height * 0.05),
+                    child: type == "quantumDeck"
+                        ? Icon(
+                            Icons.auto_awesome,
+                            color: const Color(0xFF9C27B0),
+                            size: Get.height * 0.06,
                           )
                         : Image.asset(image),
                   )),
