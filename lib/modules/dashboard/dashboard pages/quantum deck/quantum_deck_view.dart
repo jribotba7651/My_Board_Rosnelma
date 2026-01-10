@@ -4,6 +4,7 @@ import 'package:my_board/global_controllers/global_controller.dart';
 import 'package:my_board/imports.dart';
 import 'package:my_board/modules/dashboard/dashboard%20pages/quantum%20deck/quantum_deck_controller.dart';
 import 'package:my_board/modules/dashboard/dashboard%20pages/quantum%20deck/quantum_deck_detail.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../data/models/quantum_card_model.dart';
 
@@ -84,7 +85,7 @@ class QuantumDeckView extends GetView<QuantumDeckController> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    _buildCardGrid("daily"),
+                    _buildTodaysCard(),
                     _buildCardGrid("weekly"),
                     _buildCardGrid("monthly"),
                   ],
@@ -137,6 +138,177 @@ class QuantumDeckView extends GetView<QuantumDeckController> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTodaysCard() {
+    final todaysCard = controller.getTodaysCard();
+
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24.0),
+            child: Column(
+              children: [
+                Text(
+                  'Today\'s Quantum Card',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    fontFamily: AppFonts.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now()),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                    fontFamily: AppFonts.medium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Main card (larger and centered)
+          Expanded(
+            child: Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 350,
+                  maxHeight: 500,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Get.toNamed(Routes.quantumDeckDetail, arguments: todaysCard);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: _getCardColors(todaysCard.category),
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 20,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.25),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Text(
+                                  todaysCard.category.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontFamily: AppFonts.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                _getCategoryIcon(todaysCard.category),
+                                color: Colors.white.withOpacity(0.9),
+                                size: 28,
+                              ),
+                            ],
+                          ),
+
+                          Spacer(),
+
+                          Text(
+                            todaysCard.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontFamily: AppFonts.bold,
+                              height: 1.2,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          SizedBox(height: 16),
+
+                          Text(
+                            todaysCard.description,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.95),
+                              fontSize: 16,
+                              fontFamily: AppFonts.medium,
+                              height: 1.4,
+                            ),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          Spacer(),
+
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.schedule,
+                                color: Colors.white.withOpacity(0.8),
+                                size: 18,
+                              ),
+                              SizedBox(width: 6),
+                              Text(
+                                "${todaysCard.estimatedTime} minutes",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                  fontFamily: AppFonts.medium,
+                                ),
+                              ),
+                              Spacer(),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  todaysCard.difficulty,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontFamily: AppFonts.medium,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -298,15 +470,15 @@ class QuantumDeckView extends GetView<QuantumDeckController> {
 
   List<Color> _getCardColors(String category) {
     switch (category.toLowerCase()) {
-      case 'mindfulness':
-        return [Color(0xFF667eea), Color(0xFF764ba2)];
-      case 'creativity':
-        return [Color(0xFFf093fb), Color(0xFFf5576c)];
-      case 'focus':
+      case 'fire':
+        return [Color(0xFFFF6B35), Color(0xFFFF8E53)];
+      case 'earth':
+        return [Color(0xFF6B5B95), Color(0xFF88D8C0)];
+      case 'air':
         return [Color(0xFF4facfe), Color(0xFF00f2fe)];
-      case 'wellness':
+      case 'water':
         return [Color(0xFF43e97b), Color(0xFF38f9d7)];
-      case 'reflection':
+      case 'spirit':
         return [Color(0xFFfa709a), Color(0xFFfee140)];
       default:
         return [Color(0xFF667eea), Color(0xFF764ba2)];
@@ -315,16 +487,16 @@ class QuantumDeckView extends GetView<QuantumDeckController> {
 
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'mindfulness':
-        return Icons.spa;
-      case 'creativity':
-        return Icons.palette;
-      case 'focus':
-        return Icons.center_focus_strong;
-      case 'wellness':
-        return Icons.favorite;
-      case 'reflection':
-        return Icons.psychology;
+      case 'fire':
+        return Icons.local_fire_department;
+      case 'earth':
+        return Icons.terrain;
+      case 'air':
+        return Icons.air;
+      case 'water':
+        return Icons.water_drop;
+      case 'spirit':
+        return Icons.auto_awesome;
       default:
         return Icons.auto_awesome;
     }

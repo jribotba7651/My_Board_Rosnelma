@@ -39,6 +39,20 @@ class AgendaController extends GetxController {
   var lunch = ''.obs;
   var dinner = ''.obs;
 
+  // Page 3 Evening Reflection variables
+  var completedPriorities = false.obs;
+  var practicedSelfCare = false.obs;
+  var connectedWithOthers = false.obs;
+  var honoredEnergy = false.obs;
+
+  var cardManifestation = ''.obs;
+  var win1 = ''.obs;
+  var win2 = ''.obs;
+  var win3 = ''.obs;
+  var lessonsLearned = ''.obs;
+  var freeNotes = ''.obs;
+  var gratitude = ''.obs;
+
   // Current card of the day
   var currentCard = Rxn<QuantumCardModel>();
 
@@ -61,19 +75,21 @@ class AgendaController extends GetxController {
   }
 
   QuantumCardModel _getCardOfTheDay(DateTime date) {
-    // Use same deterministic algorithm as QuantumDeckController
-    final seed = date.year * 10000 + date.month * 100 + date.day;
-    final random = Random(seed);
-
-    // Get daily card templates (copied from QuantumDeckController)
+    // Use EXACT same deterministic algorithm as QuantumDeckController
     final cardTemplates = _getDailyTemplates();
 
-    // Select first card deterministically
-    final index = random.nextInt(cardTemplates.length);
-    final template = cardTemplates[index];
+    // Calculate day of year (1-366)
+    final dayOfYear = date.difference(DateTime(date.year, 1, 1)).inDays + 1;
+
+    // Add seasonal offset for more variety
+    final seasonalOffset = (date.month * 3) % 40;
+
+    // Deterministic index calculation (EXACT same as QuantumDeckController)
+    final cardIndex = (dayOfYear + seasonalOffset) % cardTemplates.length;
+    final template = cardTemplates[cardIndex];
 
     return QuantumCardModel(
-      id: 'daily_card_${date.millisecondsSinceEpoch}',
+      id: 'daily_card_${date.year}_${date.month}_${date.day}',
       title: template['title'],
       description: template['description'],
       category: template['category'],
