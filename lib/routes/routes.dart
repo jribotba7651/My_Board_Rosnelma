@@ -30,4 +30,5 @@ abstract class Routes {
   static const addLkigaiBoard = '/addLkigaiBoard';
   static const quantumDeck = '/quantumDeck';
   static const quantumDeckDetail = '/quantumDeckDetail';
+  static const agendaDigital = '/agenda-digital';
 }

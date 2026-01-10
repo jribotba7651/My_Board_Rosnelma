@@ -195,10 +195,10 @@ class QuantumDeckController extends GetxController {
         'difficulty': 'Easy',
         'tags': ['gratitude', 'writing', 'positivity'],
         'instructions': [
-          'Get a notebook or open notes app',
-          'Write three specific things you\'re grateful for',
-          'Include why each matters to you',
-          'Feel the emotion as you write'
+          'Take a moment to reflect quietly',
+          'Think of three specific things you\'re grateful for',
+          'Consider why each matters to you',
+          'Feel the emotion as you reflect'
         ],
         'benefits': ['Increased happiness', 'Better perspective', 'Improved relationships']
       },
@@ -263,7 +263,7 @@ class QuantumDeckController extends GetxController {
         'instructions': [
           'Turn off non-essential notifications',
           'Engage in offline activities',
-          'Read a physical book',
+          'Practice mindful reading or meditation',
           'Spend time in nature'
         ],
         'benefits': ['Improved sleep', 'Better relationships', 'Increased mindfulness']

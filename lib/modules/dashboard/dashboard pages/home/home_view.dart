@@ -141,7 +141,10 @@ class HomeView extends GetView<DashBoardHomeController> {
                             image: AppImages.quantumBoard,
                             text: 'Quantum Deck',
                             type: 'quantumDeck'),
-                        Expanded(child: Container()), // Empty space for now
+                        gridCard(
+                            image: AppImages.mainLogo,
+                            text: 'Digital Agenda',
+                            type: 'agendaDigital'),
                       ],
                     ),
                     ],
@@ -207,6 +210,9 @@ class HomeView extends GetView<DashBoardHomeController> {
           if (type == "quantumDeck") {
             Get.toNamed(Routes.quantumDeck);
           }
+          if (type == "agendaDigital") {
+            Get.toNamed(Routes.agendaDigital);
+          }
         },
         child: Container(
           // height: Get.height * 0.25,
@@ -222,7 +228,9 @@ class HomeView extends GetView<DashBoardHomeController> {
                   radius: Get.height * 0.07,
                   backgroundColor: type == "quantumDeck"
                       ? const Color(0xFF9C27B0).withOpacity(0.2)
-                      : const Color(0xFFB9D4D6),
+                      : type == "agendaDigital"
+                          ? const Color(0xFF008B8B).withOpacity(0.2)
+                          : const Color(0xFFB9D4D6),
                   child: Padding(
                     padding: const EdgeInsets.all(7.0),
                     child: type == "quantumDeck"
@@ -231,7 +239,13 @@ class HomeView extends GetView<DashBoardHomeController> {
                             color: const Color(0xFF9C27B0),
                             size: Get.height * 0.06,
                           )
-                        : Image.asset(image),
+                        : type == "agendaDigital"
+                            ? Icon(
+                                Icons.event_note,
+                                color: const Color(0xFF008B8B),
+                                size: Get.height * 0.06,
+                              )
+                            : Image.asset(image),
                   )),
               SizedBox(
                 height: Get.height * 0.015,
