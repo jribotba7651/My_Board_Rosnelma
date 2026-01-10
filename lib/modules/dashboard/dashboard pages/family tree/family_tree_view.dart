@@ -11,19 +11,7 @@ class FamilyTreeView extends GetView<FamilyTreeController> {
       appBar: AppBar(
         title: Text('Family Members'),
       ),
-      bottomNavigationBar: Container(
-        height: Get.height * 0.10,
-        color: Colors.white,
-        child: Center(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: ElevatedButtonW(
-              buttonText: "Add Family Member",
-              onTap: () {
-                Get.toNamed(Routes.addFamilyTree);
-              }),
-        )),
-      ),
+      bottomNavigationBar: CommonBottomNav(currentModule: 'family'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

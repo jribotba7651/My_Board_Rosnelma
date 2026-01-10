@@ -156,6 +156,7 @@ class LkiGaiBoardView extends GetView<LkigaiBoardController> {
           // )
         ]),
       ),
+      bottomNavigationBar: CommonBottomNav(currentModule: 'ikigai'),
     );
   }
 }

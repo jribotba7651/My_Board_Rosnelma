@@ -12,24 +12,7 @@ class StoryBoardView extends GetView<StoryBoardController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffold2,
-      bottomNavigationBar: Container(
-        height: Get.height * 0.10,
-        color: Colors.white,
-        child: Center(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: ElevatedButtonW(
-              buttonText: "Add Story",
-              onTap: () {
-                controller.titleCtrl.clear();
-                controller.descriptionCtrl.clear();
-                controller.imageFile = null;
-                controller.imageList = [];
-                controller.imageLocalPathList = [];
-                Get.toNamed(Routes.addStoryBoard);
-              }),
-        )),
-      ),
+      bottomNavigationBar: CommonBottomNav(currentModule: 'story'),
       body: SafeArea(
         child: Column(
           children: [

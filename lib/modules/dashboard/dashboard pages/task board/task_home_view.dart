@@ -15,18 +15,17 @@ class TaskBoardHomeView extends GetView<TaskBoardController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffold2,
-      bottomNavigationBar: Container(
-        height: Get.height * 0.10,
-        color: Colors.white,
-        child: Center(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: ElevatedButtonW(
-              buttonText: "Add Task",
-              onTap: () {
-                Get.to(AddNewTaskView());
-              }),
-        )),
+      bottomNavigationBar: CommonBottomNav(currentModule: 'tasks'),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Get.to(() => AddNewTaskView());
+        },
+        backgroundColor: Color(0xFF008B8B),
+        icon: Icon(Icons.add, color: Colors.white),
+        label: Text(
+          'Add Task',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -85,10 +84,9 @@ class TaskBoardHomeView extends GetView<TaskBoardController> {
                 ],
               ),
             ),
-            GetBuilder<TaskBoardController>(builder: (cont) {
-              return SizedBox(
-                height: Get.height - Get.height * 0.27,
-                child: Padding(
+            Expanded(
+              child: GetBuilder<TaskBoardController>(builder: (cont) {
+                return Padding(
                   padding:
                       const EdgeInsets.only(right: 15.0, left: 15.0, top: 15.0),
                   child: Column(
@@ -162,9 +160,9 @@ class TaskBoardHomeView extends GetView<TaskBoardController> {
                       }))
                     ],
                   ),
-                ),
-              );
-            })
+                );
+              }),
+            )
           ],
         ),
       ),

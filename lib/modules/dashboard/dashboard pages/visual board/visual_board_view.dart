@@ -27,27 +27,7 @@ class VisualBoardView extends GetView<VisualBoardController> {
         ),
         title: Text("Visual Board"),
       ),
-      bottomNavigationBar: Container(
-        height: Get.height * 0.10,
-        color: Colors.white,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: ElevatedButtonW(
-              buttonText: "ADD",
-              onTap: () {
-                controller.titleCtrl.clear();
-                controller.descriptionCtrl.clear();
-                controller.imageFile = null;
-                controller.imageList = [];
-                controller.imageLocalPathList = [];
-                controller.selectedGoal = "";
-                Get.toNamed(Routes.addVisualBoard);
-              },
-            ),
-          ),
-        ),
-      ),
+      bottomNavigationBar: CommonBottomNav(currentModule: 'visual'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GetBuilder<VisualBoardController>(

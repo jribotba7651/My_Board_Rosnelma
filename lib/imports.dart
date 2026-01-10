@@ -19,4 +19,5 @@ export 'widget/loading_animation.dart';
 export 'widget/custom_textfields.dart';
 export 'widget/custom_appbar_widget.dart';
 export 'widget/my_upcomming_session_card.dart';
+export 'core/widgets/common_bottom_nav.dart';
 export 'package:card_loading/card_loading.dart';

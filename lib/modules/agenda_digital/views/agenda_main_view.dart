@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../imports.dart';
 import '../controllers/agenda_controller.dart';
 import 'page1_carta_intencion_view.dart';
 import 'page2_planificacion_view.dart';
@@ -33,6 +34,7 @@ class AgendaMainView extends StatelessWidget {
             Page3ReflexionView(),
           ],
         ),
+        bottomNavigationBar: CommonBottomNav(currentModule: 'agenda'),
       ),
     );
   }
