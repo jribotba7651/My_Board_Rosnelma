@@ -49,33 +49,68 @@ class PowerMeController extends GetxController {
 
   //___________________________ Select Image From Gallery
   Future<void> selectImage(ImageSource source, String type) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
 
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-      imageLocalPathList.add(imageFile!);
-      Get.back();
-      isImageUploading = true;
-      update();
-      String path = await APIService().uploadSingleFile(imageFile!.path);
-      if (type == "file") {
-        if (path.isNotEmpty) {
-          //image = path;
-          imageList.add(path);
+      if (pickedFile != null) {
+        imageFile = File(pickedFile.path);
+        imageLocalPathList.add(imageFile!);
+        Get.back();
+        isImageUploading = true;
+        update();
+
+        String path = await APIService().uploadSingleFile(imageFile!.path);
+
+        if (type == "file") {
+          if (path.isNotEmpty) {
+            imageList.add(path);
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Success',
+              'Image uploaded successfully',
+              backgroundColor: Color(0xFF008B8B),
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 2),
+            );
+          } else {
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Error',
+              'Failed to upload image',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+          }
+        } else {
           isImageUploading = false;
           update();
         }
       } else {
-        //selectedStory.image!.add(path);
         isImageUploading = false;
-
         update();
+        print('No image selected.');
       }
-    } else {
+    } catch (e) {
       isImageUploading = false;
       update();
-      print('No image selected.');
+      print('Error selecting image: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to select image: ${e.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
@@ -152,32 +187,47 @@ class PowerMeController extends GetxController {
     }
   }
 
-  ///_________________________________ GET STORIES
+  ///_________________________________ GET POWER ME DATA
   List<StoryModel> storyList = [];
   getAllPowerMe() async {
     print(EndPoint.viewPowerMe);
     try {
       dataLoading = true;
       update();
+
       dynamic data = await APIService().getDataWithAPIWithoutContext(
         url: EndPoint.viewPowerMe,
       );
-      if (data != null) {
-        storyList.clear();
-           visualBoardData = VisualBoardModel.fromJson(data['powerOfMeData'][0]);
-          dataLoading = false;
-          update();
-        
 
-        dataLoading = false;
-        update();
+      if (data != null && data['powerOfMeData'] != null && data['powerOfMeData'].isNotEmpty) {
+        storyList.clear();
+        visualBoardData = VisualBoardModel.fromJson(data['powerOfMeData'][0]);
       } else {
-        dataLoading = false;
-        update();
+        // Initialize with empty data if no data found
+        visualBoardData = VisualBoardModel();
+        print('No PowerMe data found, initializing with empty model');
       }
+
+      dataLoading = false;
+      update();
+
     } catch (error) {
       dataLoading = false;
       update();
+      print('Error loading PowerMe data: $error');
+
+      // Initialize with empty data on error
+      visualBoardData = VisualBoardModel();
+
+      // Show user-friendly error message
+      Get.snackbar(
+        'Loading Error',
+        'Failed to load Power Me data. Please check your connection.',
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 

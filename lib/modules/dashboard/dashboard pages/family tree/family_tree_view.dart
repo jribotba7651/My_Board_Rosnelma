@@ -12,22 +12,61 @@ class FamilyTreeView extends GetView<FamilyTreeController> {
         title: Text('Family Members'),
       ),
       bottomNavigationBar: CommonBottomNav(currentModule: 'family'),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: GetBuilder<FamilyTreeController>(builder: (cont) {
-            if (cont.dataLoading) {
-              return Center(
-                  child: Padding(
-                padding: EdgeInsets.only(top: Get.height * 0.4),
-                child: CircularProgressIndicator(
-                  color: AppColors.appColor,
-                ),
-              ));
-            } else if (cont.familyTree == null) {
-              return Center(child: Text('No Family Data Available'));
-            } else {
-              return Column(
+      body: SafeArea(
+        child: GetBuilder<FamilyTreeController>(builder: (cont) {
+          if (cont.dataLoading) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.appColor),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Loading family data...',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if (cont.familyTree == null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.family_restroom,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'No Family Data Available',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Start by adding family members',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
                 children: [
                   // Grandparents Row
                   _relationRow(
@@ -85,11 +124,14 @@ class FamilyTreeView extends GetView<FamilyTreeController> {
                             (sister) => sister.firstName ?? 'Unknown Sister')
                       ],
                       Colors.greenAccent),
+
+                  SizedBox(height: 20), // Add bottom padding
                 ],
-              );
-            }
-          }),
-        ),
+              ),
+            ),
+          );
+          }
+        }),
       ),
     );
   }

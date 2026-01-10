@@ -29,26 +29,46 @@ class VisualBoardView extends GetView<VisualBoardController> {
       ),
       bottomNavigationBar: CommonBottomNav(currentModule: 'visual'),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: GetBuilder<VisualBoardController>(
-            builder: (cont) {
-              return Column(
+        child: GetBuilder<VisualBoardController>(
+          builder: (cont) {
+            print('VISUAL BOARD VIEW: Building with dataLoading: ${cont.dataLoading}');
+
+            if (cont.dataLoading) {
+              print('VISUAL BOARD VIEW: Showing loading indicator');
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.appColor),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Loading visual board data...',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            print('VISUAL BOARD VIEW: Showing content');
+            return SingleChildScrollView(
+              child: Column(
                 children: [
                   _buildSection("Short Term Goals", controller.visualBoardData.shortTermGoal),
                   _buildSection("Long Term Goals", controller.visualBoardData.longTermGoal),
                   _buildSection("Capabilities", controller.visualBoardData.capability),
-                //  _buildSection("Missions", controller.visualBoardData.mission),
-                 // _buildSection("Passions", controller.visualBoardData.passion),
-                 // _buildSection("Personal Goals", controller.visualBoardData.personalGoal),
-                //  _buildSection("Professions", controller.visualBoardData.profession),
                   _buildSection("Role Models", controller.visualBoardData.roleModel),
                   _buildSection("Visual Representations", controller.visualBoardData.visualRepresentation),
-                //  _buildSection("Vocations", controller.visualBoardData.vocation),
-
+                  SizedBox(height: 20), // Add bottom padding
                 ],
-              );
-            }
-          ),
+              ),
+            );
+          }
         ),
       ),
     );

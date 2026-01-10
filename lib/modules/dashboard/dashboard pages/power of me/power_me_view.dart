@@ -31,25 +31,46 @@ class PowerMeView extends GetView<PowerMeController> {
       ),
       bottomNavigationBar: CommonBottomNav(currentModule: 'power'),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: GetBuilder<PowerMeController>(
-            builder: (cont) {
-              return Column(
+        child: GetBuilder<PowerMeController>(
+          builder: (cont) {
+            if (cont.dataLoading) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.appColor),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Loading Power Me data...',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return SingleChildScrollView(
+              child: Column(
                 children: [
                   _buildSection("Short Term Goals", controller.visualBoardData.shortTermGoal),
                   _buildSection("Long Term Goals", controller.visualBoardData.longTermGoal),
                   _buildSection("Capabilities", controller.visualBoardData.capability),
                   _buildSection("Missions", controller.visualBoardData.mission),
                   _buildSection("Passions", controller.visualBoardData.passion),
-                  _buildSection("Personal Goals", controller.visualBoardData.personalGoal), _buildSection("Professions", controller.visualBoardData.profession),
+                  _buildSection("Personal Goals", controller.visualBoardData.personalGoal),
+                  _buildSection("Professions", controller.visualBoardData.profession),
                   _buildSection("Role Models", controller.visualBoardData.roleModel),
                   _buildSection("Visual Representations", controller.visualBoardData.visualRepresentation),
-                //  _buildSection("Vocations", controller.visualBoardData.vocation),
-
+                  SizedBox(height: 20), // Add bottom padding
                 ],
-              );
-            }
-          ),
+              ),
+            );
+          }
         ),
       ),
     );

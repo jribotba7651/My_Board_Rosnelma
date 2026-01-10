@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:my_board/data/models/visual_board_model.dart';
 import 'package:my_board/imports.dart';
@@ -39,33 +40,72 @@ class VisualBoardController extends GetxController {
 
   //___________________________ Select Image From Gallery
   Future<void> selectImage(ImageSource source, String type) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
+    try {
+      print('VISUAL BOARD: selectImage called with source: $source, type: $type');
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
 
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-      imageLocalPathList.add(imageFile!);
-      Get.back();
-      isImageUploading = true;
-      update();
-      String path = await APIService().uploadSingleFile(imageFile!.path);
-      if (type == "file") {
-        if (path.isNotEmpty) {
-          //image = path;
-          imageList.add(path);
+      if (pickedFile != null) {
+        print('VISUAL BOARD: Image picked successfully');
+        imageFile = File(pickedFile.path);
+        imageLocalPathList.add(imageFile!);
+        Get.back();
+        isImageUploading = true;
+        update();
+
+        print('VISUAL BOARD: Uploading image to server');
+        String path = await APIService().uploadSingleFile(imageFile!.path);
+
+        if (type == "file") {
+          if (path.isNotEmpty) {
+            imageList.add(path);
+            isImageUploading = false;
+            update();
+            print('VISUAL BOARD: Image uploaded successfully');
+            Get.snackbar(
+              'Success',
+              'Image uploaded successfully',
+              backgroundColor: Color(0xFF008B8B),
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 2),
+            );
+          } else {
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Error',
+              'Failed to upload image',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+          }
+        } else {
           isImageUploading = false;
           update();
         }
       } else {
-        //selectedStory.image!.add(path);
         isImageUploading = false;
-
         update();
+        print('VISUAL BOARD: No image selected.');
       }
-    } else {
+    } catch (e) {
       isImageUploading = false;
       update();
-      print('No image selected.');
+      print('VISUAL BOARD: Error selecting image: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to select image: ${e.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
@@ -132,32 +172,54 @@ class VisualBoardController extends GetxController {
     }
   }
 
-  ///_________________________________ GET STORIES
+  ///_________________________________ GET VISUAL BOARD DATA
   List<StoryModel> storyList = [];
   getAllVisuals() async {
+    print('VISUAL BOARD: getAllVisuals started');
     try {
+      print('VISUAL BOARD: Setting dataLoading to true');
       dataLoading = true;
       update();
+      print('VISUAL BOARD: update() called after setting loading true');
+
+      print('VISUAL BOARD: Calling API ${EndPoint.viewVisual}');
       dynamic data = await APIService().getDataWithAPIWithoutContext(
         url: EndPoint.viewVisual,
       );
-      if (data != null) {
+      print('VISUAL BOARD: API call completed, data: $data');
+
+      if (data != null && data['visualBoardData'] != null && data['visualBoardData'].isNotEmpty) {
         storyList.clear();
-
-           visualBoardData = VisualBoardModel.fromJson(data['visualBoardData'][0]);
-          dataLoading = false;
-          update();
-        
-
-        dataLoading = false;
-        update();
+        print('VISUAL BOARD: Parsing visual board data');
+        visualBoardData = VisualBoardModel.fromJson(data['visualBoardData'][0]);
+        print('VISUAL BOARD: Visual board data parsed successfully');
       } else {
-        dataLoading = false;
-        update();
+        print('VISUAL BOARD: No visual board data found, initializing empty model');
+        visualBoardData = VisualBoardModel();
       }
-    } catch (error) {
+
+      print('VISUAL BOARD: Setting dataLoading to false');
       dataLoading = false;
       update();
+      print('VISUAL BOARD: getAllVisuals completed successfully');
+
+    } catch (error) {
+      print('VISUAL BOARD ERROR: $error');
+      dataLoading = false;
+      update();
+
+      // Initialize with empty data on error
+      visualBoardData = VisualBoardModel();
+
+      // Show user-friendly error message
+      Get.snackbar(
+        'Loading Error',
+        'Failed to load visual board data. Please check your connection.',
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
@@ -218,8 +280,11 @@ class VisualBoardController extends GetxController {
 
   @override
   void onInit() {
-    getAllVisuals();
+    print('VISUAL BOARD: onInit started');
     super.onInit();
+    print('VISUAL BOARD: super.onInit completed');
+    getAllVisuals();
+    print('VISUAL BOARD: getAllVisuals called');
   }
 }
 
