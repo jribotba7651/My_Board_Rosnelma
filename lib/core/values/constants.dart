@@ -81,12 +81,12 @@ class AppImages {
 
   static const bgImage = "assets/images/splash-bg.png";
   static const mainLogo = "assets/images/main-logo.png";
-  static const lkigaiBoard = "assets/images/ikigai-board-new.png";
-  static const taskBoard = "assets/images/task-board-new.png";
-  static const powerMeBoard = "assets/images/power-of-me-new.png";
-  static const storyBoard = "assets/images/story-board-new.png";
-  static const familyTreeeBoard = "assets/images/family-tree-new.png";
-  static const visualBoard = "assets/images/visual-board-new.png";
-  static const quantumBoard = "assets/images/quantum-deck.png";
+  static const lkigaiBoard = "assets/images/likgai-board.png";
+  static const taskBoard = "assets/images/task-board.png";
+  static const powerMeBoard = "assets/images/power-of-me.png";
+  static const storyBoard = "assets/images/story-board.png";
+  static const familyTreeeBoard = "assets/images/family-tree.png";
+  static const visualBoard = "assets/images/visual-board.png";
+  static const quantumBoard = "assets/images/main-logo.png";
    static const editorTools = "assets/images/editor-tools.png";
 }
