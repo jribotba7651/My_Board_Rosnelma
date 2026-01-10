@@ -27,78 +27,235 @@ class LkigaiBoardController extends GetxController {
   TextEditingController descriptionCtrl = TextEditingController();
 
   //___________________________ Select Image From Gallery
-   selectImage(ImageSource source, String type) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
+  selectImage(ImageSource source, String type) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
 
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-      imageLocalPathList.add(imageFile!);
-      Get.back();
-      isImageUploading = true;
-      update();
-      String path = await APIService().uploadSingleFile(imageFile!.path);
-      if (type == "file") {
-        if (path.isNotEmpty) {
-          //image = path;
-          imageList.add(path);
-          isImageUploading = false;
-          update();
+      if (pickedFile != null) {
+        imageFile = File(pickedFile.path);
+        imageLocalPathList.add(imageFile!);
+        Get.back();
+        isImageUploading = true;
+        update();
+
+        String path = await APIService().uploadSingleFile(imageFile!.path);
+
+        if (type == "file") {
+          if (path.isNotEmpty) {
+            imageList.add(path);
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Success',
+              'Image uploaded successfully',
+              backgroundColor: Color(0xFF008B8B),
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 2),
+            );
+          } else {
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Error',
+              'Failed to upload image',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+          }
+        } else {
+          if (path.isNotEmpty) {
+            selectedLkigai.image!.add(path);
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Success',
+              'Image uploaded successfully',
+              backgroundColor: Color(0xFF008B8B),
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 2),
+            );
+          } else {
+            isImageUploading = false;
+            update();
+            Get.snackbar(
+              'Error',
+              'Failed to upload image',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+          }
         }
       } else {
-        selectedLkigai.image!.add(path);
         isImageUploading = false;
-
         update();
+        print('No image selected.');
       }
-    } else {
+    } catch (e) {
       isImageUploading = false;
       update();
-      print('No image selected.');
+      print('Error selecting image: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to select image: ${e.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
   ///_________________________________ SUBMIT LKIGAI
   submitLkigai(BuildContext context) async {
-    if (titleCtrl.text.isEmpty) {
-      Show.showErrorSnackBar("Error", "Please Add Title");
-    } else if (descriptionCtrl.text.isEmpty) {
-      Show.showErrorSnackBar("Error", "Please Add Description");
-    } else if (imageList.isEmpty) {
-      Show.showErrorSnackBar("Error", "Please Select Image");
-    } else if (isImageUploading == true) {
-      Show.showErrorSnackBar("Error", "Wait....Image Uploading");
-    } else {
+    try {
+      // Validate all required fields
+      if (titleCtrl.text.trim().isEmpty) {
+        Get.snackbar(
+          'Validation Error',
+          'Please add a title',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      if (descriptionCtrl.text.trim().isEmpty) {
+        Get.snackbar(
+          'Validation Error',
+          'Please add a description',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      if (imageList.isEmpty) {
+        Get.snackbar(
+          'Validation Error',
+          'Please select at least one image',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      if (isImageUploading == true) {
+        Get.snackbar(
+          'Please Wait',
+          'Image is still uploading. Please wait...',
+          backgroundColor: Colors.blue,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      // Show loading dialog
+      Get.dialog(
+        Center(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(color: Color(0xFF008B8B)),
+                SizedBox(height: 16),
+                Text('Creating Ikigai...'),
+              ],
+            ),
+          ),
+        ),
+        barrierDismissible: false,
+      );
+
       var body = {
-        "title": titleCtrl.text,
-        "description": descriptionCtrl.text,
+        "title": titleCtrl.text.trim(),
+        "description": descriptionCtrl.text.trim(),
         "image": imageList
       };
-      print("Image Length: ${imageList.length}");
-      try {
-        postingData = true;
-        update();
-        bool result = await APIService().postDataWithAPI(
-            url: "${EndPoint.addLkigai}${selectedType.toLowerCase()}",
-            data: body,
-            context: context);
-        if (result) {
-          postingData = false;
-          titleCtrl.clear();
-          descriptionCtrl.clear();
-          imageFile = null;
-          imageList = [];
-          await getLkigai();
-          Get.back();
-        } else {
-          postingData = false;
-          update();
-        }
-      } catch (error) {
-        postingData = false;
-        update();
-        debugPrint("Error $error");
+
+      print("Creating Ikigai with ${imageList.length} images");
+
+      postingData = true;
+      update();
+
+      bool result = await APIService().postDataWithAPI(
+        url: "${EndPoint.addLkigai}${selectedType.toLowerCase()}",
+        data: body,
+        context: context
+      );
+
+      postingData = false;
+      update();
+
+      // Close loading dialog
+      if (Get.isDialogOpen == true) {
+        Get.back();
       }
+
+      if (result) {
+        // Success - clear form and refresh data
+        titleCtrl.clear();
+        descriptionCtrl.clear();
+        imageFile = null;
+        imageList.clear();
+        imageLocalPathList.clear();
+
+        await getLkigai();
+
+        Get.snackbar(
+          'Success',
+          'Ikigai created successfully!',
+          backgroundColor: Color(0xFF008B8B),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 2),
+        );
+
+        Get.back(); // Return to list
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to create Ikigai. Please try again.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (error) {
+      postingData = false;
+      update();
+
+      // Close loading dialog if open
+      if (Get.isDialogOpen == true) {
+        Get.back();
+      }
+
+      debugPrint("Error creating Ikigai: $error");
+
+      Get.snackbar(
+        'Error',
+        'An unexpected error occurred: ${error.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
